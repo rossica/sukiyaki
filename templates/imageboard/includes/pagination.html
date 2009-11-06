@@ -1,0 +1,31 @@
+<div class="pagination">
+    <p>
+        {% if posts.paginator.num_pages %}
+        {% ifnotequal posts.paginator.num_pages 1 %}
+            {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}">previous</a>
+            {% else %}
+                previous
+            {% endif %}
+            
+            [
+            {% for pagenum in posts.paginator.page_range %}
+               {% ifequal pagenum posts.number %}
+                   {{ pagenum }} 
+                   {% if not forloop.last %}|{% endif %} 
+               {% else %}
+                   <a href="?page={{ pagenum }}">{{ pagenum }}</a>
+                   {% if not forloop.last %}|{% endif %} 
+               {% endifequal %}
+            {% endfor %}
+            ]
+            
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}">next</a>
+            {% else %}
+                next
+            {% endif %}
+        {% endifnotequal %}
+        {% endif %}
+    </p>
+</div>

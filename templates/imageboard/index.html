@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Board Index</title>
+    <link rel="stylesheet" href="/media/base.css" type="text/css" />
+    <link rel="stylesheet" href="/media/color.css" type="text/css" />
+    </head>
+    <body>
+        {% include "imageboard/includes/board_list.html" %}
+        <div class="main_board_list">
+        <p class="available_boards">
+            SFW Image Boards:
+        </p>
+        {% regroup board_list by images as image_list %}
+        {% for item in image_list %}
+            {% if item %}
+                {% for board in item.list %}
+                    {% if board.images %}
+                        {% if not board.nsfw %}
+                            <p class="board_row">
+                                <a href="{% url imageboard.views.view_board board.abbr %}" class="board_link" title="/{{board.abbr}}/">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="board_name">{{board.name}}</span>
+                                </a>
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <p class="available_boards">
+            SFW Text Boards:
+        </p>
+        {% for item in image_list %}
+            {% if item %}
+                {% for board in item.list %}
+                    {% if not board.images %}
+                        {% if not board.nsfw %}
+                            <p class="board_row">
+                                <a href="{% url imageboard.views.view_board board.abbr %}" class="board_link" title="/{{board.abbr}}/">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="board_name">{{board.name}}</span>
+                                </a>
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <p class="available_boards">
+             NSFW Boards:
+        </p>
+        {% regroup board_list by nsfw as nsfw_list %}
+        {% for item in nsfw_list %}
+            {% if item %}
+                {% for board in item.list %}
+                    {% if board.nsfw %}
+                        <p class="board_row">
+                                <a href="{% url imageboard.views.view_board board.abbr %}" class="board_link" title="/{{board.abbr}}/">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="board_name">{{board.name}}</span>
+                                </a>
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <p class="available_boards">
+            <!--spacer-->
+        </p>
+        </div>
+        
+        {% include "imageboard/includes/footer.html" %}
+    </body>
+</html>

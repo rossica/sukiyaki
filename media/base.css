@@ -1,0 +1,322 @@
+/**
+ * =============================================================
+ * Sukiyaki base styles
+ * 
+ * This stylesheet should contain styles relating to position
+ * and size. Colors and formatting should not be here.
+ * =============================================================
+ */
+
+
+
+
+
+
+/**
+ * =============================================================
+ * GLOBAL STYLES
+ * =============================================================
+ */
+
+BODY {
+	margin: 0;
+	padding: 0;
+	
+	/*background-color: #d5dca0;*/
+	background-color: #d7dfc8;
+	color: #000;
+	font: 90%/1.0 'Verdana', 'Arial', 'Helvedica', sans-serif;
+	padding: 20px;
+}
+
+P {
+	margin: 0;
+	padding: 0;
+}
+
+
+
+
+/** 
+ * =============================================================
+ * LINKS
+ * =============================================================
+ */
+
+A {
+	color: blue;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+
+A.board_index_link {
+	font-weight: bold;
+	margin-right: 10px;
+	text-decoration: none;
+	color: #000;
+}
+
+A.board_index_link:hover {
+	color: #666;
+	text-decoration: none;
+}
+
+A.see_all_link {
+	margin-left: 50px;
+	margin-top: 10px;
+}
+
+.reply_link {
+	float: right;
+	margin-left: 10px;
+	display: inline-block;
+}
+
+.reply_link A {
+	text-decoration: none;
+}
+
+.full_thread_link {
+	margin: 5px;
+}
+
+A:hover {
+	text-decoration: underline;
+	color: #6666FF;
+}
+
+
+.board_row {
+	font-size: 1.3em;
+}
+
+
+P#board_list, DIV#footer {
+	padding: 3px;
+	border: 1px solid #588f64;
+	background-color: #88b392;
+}
+
+DIV#footer {
+	margin-top: 5px;
+}
+
+.main_board_list {
+	margin: 10px 3px 3px 3px;
+	padding: 3px;
+	border: 1px solid black;
+}
+
+
+
+
+
+/**
+ * =============================================================
+ *   FORM FIELD STYLES
+ * =============================================================
+ */
+
+INPUT, TEXTAREA {
+	border: 1px solid black;
+	background-color: white;
+	color: black;
+	font-family: monospace;
+}
+
+FORM.board_form, FORM.post_form {
+	margin: 10px 3px 3px 3px;
+	padding: 3px;
+	border: 1px solid black;
+	background-color: #bcd6a7;
+}
+
+FORM.board_form LABEL, FORM.post_form LABEL {
+	width: 120px;
+	font-weight: bold;
+	display: inline-block;
+	text-align: right;
+}
+
+FORM.board_form P, FORM.post_form P {
+	margin-bottom: 2px;
+}
+
+.vote_form {
+	clear: both;
+}
+
+.vote_form FORM {
+	display: inline;
+}
+
+
+
+/**
+ * =============================================================
+ * ERROR MESSAGES
+ * =============================================================
+ */
+
+
+.form_error_message, .errorlist, .form_error_occured {
+	background-color: #CCC;
+	padding:3px;
+	color: red;
+	font-weight: bold;
+}
+
+.form_error_message, .form_error_occured {
+	margin-bottom: 10px;
+}
+
+.errorlist {
+	display: inline-block;
+	margin-left: 126px;
+	list-style-type: none;
+	border: 2px solid red;
+}
+
+
+
+
+
+
+DIV#post_links {
+	margin: 10px 3px 3px 3px;
+	padding: 3px;
+	border: 1px solid black;
+}
+
+.submit_new_thread, .make_comment {
+	margin-top: 10px;
+}
+
+.post_parent {
+	margin: 20px 3px 0px 3px;
+	padding: 3px;
+}
+
+.reply {
+	margin-top: -1px;
+}
+
+.reply, .post_parent {
+	width: 650px;
+}
+
+.reply, .post_parent, .main_board_list {
+	padding: 3px;
+	border: 1px solid #789e5a;
+	background-color: #bcd6a7;
+}
+
+.post_data, .available_boards {
+	margin-bottom: 5px;
+	padding: 5px;
+	background-color: #aec29f;
+}
+
+.available_boards {
+	font-size: 1.4em;
+}
+
+DIV.comment {
+	margin-bottom: 10px;
+}
+
+DIV.post_replies {
+	margin-bottom: 4px;
+}
+
+DIV#board_title {
+	text-align: center;
+	font-size: 2em;
+	margin-top: 5px;
+}
+
+
+
+/**
+ * =============================================================
+ * IMAGES
+ * =============================================================
+ */
+
+
+.image_box {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.thumbnail {
+	display: block;
+	border: 1px solid black;
+}
+
+.image_meta_data {
+	text-align: center;
+	font-style: italic;
+	color: #444;
+	font-size: .7em;
+	background-color: #FFF3CC;
+	border: 1px solid black;
+	border-top: 0px;
+	padding: 2px;
+}
+
+.image_size:after {
+	content: " bytes";
+}
+
+DIV.post_replies .thumbnail {
+	width: 150px;
+}
+
+
+
+
+
+
+
+
+.complex_board_list {
+	margin-bottom: 20px;
+}
+
+.board_first_post {
+	margin-top: 30px;
+}
+
+.username {
+	font-weight: bold;
+}
+
+.subject {
+	color: #777;
+	font-style: italic;
+	display: inline-block;
+}
+
+.date {
+	float: right;
+}
+
+.posting_mode {
+	text-align: center;
+	background-color: #aec29f;
+	padding: 4px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+
+.delform {
+	margin-top: 30px;
+}
+
+.pagination {
+	margin: 10px 0 10px 0;
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <title>Sukiyaki</title>
+        <link rel="stylesheet" href="/media/base.css" type="text/css" />
+        <link rel="stylesheet" href="/media/color.css" type="text/css" />
+        {% if type %}
+        <meta http-equiv="refresh" content="2; url='{% url imageboard.views.view_text_post return %}'" />
+        {% else %}
+        <meta http-equiv="refresh" content="2; url='{% url imageboard.views.view_post return %}'" />
+        {% endif %}
+    </head>
+    <body>
+        <div id="vote">
+            <p class="vote_message">
+                {{ message }}
+            </p>
+            <p class="vote_error">{{ error }}</p>
+            <p id="vote_link">
+                {% if type %}
+                    <a href="{% url imageboard.views.view_text_post return %}">Click here to return.</a>
+                {% else %}
+                    <a href="{% url imageboard.views.view_post return %}">Click here to return.</a>
+                {% endif %}
+            </p>
+        </div>
+    </body>
+</html>

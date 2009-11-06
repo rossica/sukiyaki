@@ -1,0 +1,173 @@
+{% load imageboard_extras %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Viewing post: #{{post.id}}</title>
+    <link rel="stylesheet" href="/media/base.css" type="text/css" />
+    <link rel="stylesheet" href="/media/color.css" type="text/css" />
+    </head>
+    <body>
+    {% include "imageboard/includes/board_list.html" %}
+    <div id="board_title">        
+        <span class="board_abbr">/{{post.board.abbr}}/</span> 
+        <span class="board_name">{{post.board.name}}</span>
+    </div>
+    {% if post.text %}
+        <form action="{% url imageboard.views.text_reply post.id %}" method="post" class="post_form">
+    {% else %}
+        <form enctype="multipart/form-data" action="{% url imageboard.views.reply post.id %}" method="post" class="post_form">
+    {% endif %}
+    <p class="posting_mode">Posting mode: reply</p>
+    {% if error_message %}<p class="form_error_message">{{ error_message }}</p>{% endif %}
+    {% if form.errors %} <p style="form_error_occured"> Correct the error{{form.errors|pluralize}} below.</p> {% endif %}
+    {{form.as_p}}
+    <input type="submit" value="post reply" class="make_comment" />
+    </form>
+    
+    {% if post.reply %}
+        {% if post.text %}
+            <div id="nav_menu">
+            Go to: 
+            <a href="{% url imageboard.views.view_text_post text_id=post.root.id %}">root</a>,
+            <a href="{% url imageboard.views.view_text_post text_id=post.reply.id %}">parent</a>
+            </div>
+        {% else %}
+            <div id="nav_menu">
+            Go to: 
+            <a href="{% url imageboard.views.view_post post_id=post.root.id %}">root</a>,
+            <a href="{% url imageboard.views.view_post post_id=post.reply.id %}">parent</a>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    
+    <!--==========================================================================-->
+    <!-- PARENT DATA                                                              -->
+    <!--==========================================================================-->
+    <div class="post_parent" id="post-{{ post.id }}">
+
+    
+    
+    <div class="post_data">
+        {% if post.text %}
+            <div class="reply_link">[<a href="{% url imageboard.views.view_text_post text_id=post.id %}">reply</a>]</div>
+        {% else %}
+            <div class="reply_link">[<a href="{% url imageboard.views.view_post post_id=post.id %}">reply</a>]</div>
+        {% endif %}
+        <span class="date">{{post.post_time|date:"D d.m.Y G:i:s"}}</span>
+        <span class="post_id"><a href='#post-{{post.id}}'>#{{post.id}}</a></span>
+        {% if post.email %}
+            <span class="username"><a href="mailto:{{post.email}}">{{post.user_name}}</a></span>
+        {% else %}
+            <span class="username">{{post.user_name}}</span>
+        {% endif %}
+        <span class="subject">{{post.subject}}</span>
+    </div>
+    
+    {% if post.image %}
+    <div class="image_box">
+        <a href="{{ post.image.url }}" class="image_link" target="_blank">
+            <img src="{{ post.thumbnail.url }}" class="thumbnail" alt="{{post.file_name}}" title="{{post.file_name}}" border="0" />
+        </a>
+        <p class="image_meta_data">
+            <span class="image_size">{{post.image.size}}</span>
+            <span class="image_dimensions">({{post.image.width}}x{{post.image.height}})</span>
+        </p>
+    </div>
+    {% endif %}
+    
+    
+    <div class="comment">{{post.comment|seewhitespace|urlizetrunc:60|linebreaksbr}}</div>
+        <div class="vote_form">
+            {% if post.text %}
+                <form action="{%url imageboard.views.sage_text post.id '' %}" method="post">
+                    <input type="submit" value="Age" class="age_button" /> 
+                </form>
+                <form action="{%url imageboard.views.sage_text post.id 's' %}" method="post">
+                    <input type="submit" value="SAGE!" class="sage_button" /> 
+                </form>
+            {% else %}
+                <form action="{%url imageboard.views.sage post.id '' %}" method="post">
+                    <input type="submit" value="Age" class="age_button" /> 
+                </form>
+                <form action="{%url imageboard.views.sage post.id 's' %}" method="post">
+                    <input type="submit" value="SAGE!" class="sage_button" /> 
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    <!--==========================================================================-->
+    <!-- REPLIES                                                                  -->
+    <!--==========================================================================-->
+    <div class="post_replies">
+    {% for r,indent in post.get_tree %}
+        <div style="margin-left:{{indent}}px;" class="reply" id="post-{{ r.id }}">
+
+            <div class="post_data">
+                {% if r.text %}
+                    <div class="reply_link">[<a href="{% url imageboard.views.view_text_post text_id=r.id %}">reply</a>]</div>
+                {% else %}
+                    <div class="reply_link">[<a href="{% url imageboard.views.view_post post_id=r.id %}">reply</a>]</div>
+                {% endif %}
+                <span class="date">{{r.post_time|date:"D d.m.Y G:i:s"}}</span>
+                <span class="post_id"><a href='#post-{{r.id}}'>#{{r.id}}</a></span>
+                {% if r.email %}
+                    <span class="username"><a href="mailto:{{r.email}}">{{r.user_name}}</a></span>
+                {% else %}
+                    <span class="username">{{r.user_name}}</span>
+                {% endif %}
+                <span class="subject">{{r.subject}}</span>
+            </div>
+            
+            {% if r.image %}
+            <div class="image_box">
+                <a href="{{r.image.url }}" class="image_link" target="_blank">
+                    <img src="{{ r.thumbnail.url }}" class="thumbnail" alt="{{r.file_name}}" title="{{r.file_name}}"  border="0" />
+                </a>
+                <p class="image_meta_data">
+                    <span class="image_size">{{r.image.size}}</span>
+                    <span class="image_dimensions">({{r.image.width}}x{{r.image.height}})</span>
+                </p>
+            </div>
+            {% endif %}
+            
+            <div class="comment">{{r.comment|seewhitespace|urlizetrunc:60|linebreaksbr}}</div>
+            <div class="vote_form">
+                {% if r.text %}
+                    <form action="{%url imageboard.views.sage_text r.id '' %}" method="post">
+                        <input type="submit" value="Age" class="age_button" /> 
+                    </form>
+                    <form action="{%url imageboard.views.sage_text r.id 's' %}" method="post">
+                        <input type="submit" value="SAGE!" class="sage_button" /> 
+                    </form>
+                {% else %}
+                    <form action="{%url imageboard.views.sage r.id '' %}" method="post">
+                        <input type="submit" value="Age" class="age_button" /> 
+                    </form>
+                    <form action="{%url imageboard.views.sage r.id 's' %}" method="post">
+                        <input type="submit" value="SAGE!" class="sage_button" /> 
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    
+    {% if post.text %}
+        <form action="{% url imageboard.views.delete_text text_id=post.id %}" method="post" class="delform">
+    {% else %}
+        <form action="{% url imageboard.views.delete post_id=post.id %}" method="post" class="delform">
+    {% endif %}
+            {{delform.password.label}}:
+            {{delform.password}}
+            <input value="delete" type="submit"> 
+        </form>
+    
+
+    {% include "imageboard/includes/footer.html" %}
+    </body>
+</html>
