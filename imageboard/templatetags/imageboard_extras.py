@@ -63,9 +63,9 @@ truncatechars = stringfilter(truncatechars)
 def forcewrap(value, arg):
     """
     Inserts newline characters every so many characters.
-    This filter is dumb and inserts newlines unintelligently.
+    This filter is dumb and inserts newlines inside words.
     
-    Argument: Number of characters to insert a newline after
+    Argument: Number of characters to insert a newline
     """
     from django.utils.encoding import force_unicode
     
@@ -74,20 +74,39 @@ def forcewrap(value, arg):
     except ValueError:
         return value
         
-    chars = [] # List of chars
-    
-    for i in range(len(value)): # Put the chars into a list
-        chars.append(value[i])
-        
-    extras = len(chars)/length # compute how many newlines will be inserted into the string
-    
-    for i in range(0, len(chars)+extras, length): # Insert newlines
-        chars.insert(i, '\n')
+    lines = value.splitlines(True)
     
     output = ""
-    for i in chars: # rebuild a string from the list of chars.
-        output += i
-        
+    
+    for line in lines: # For every line in the input
+        if len(line) > length: # if the line is longer than the arg
+            chars = [] # List of chars
+
+            ## Possible Changes:
+            ## Instead of breaking into chars, break into lines, then into words, split by space. Then add newlines.
+            ## If there are no words in a line, then insert the newline into the word.
+            
+            words = line.split(' ')
+            
+            if len(words) == 1: # only one long word in the line
+                pass # insert a newline in the string
+                
+            else: # more than 1 word in the line
+                pass
+                
+            for i in line: # Put the chars into a list
+                chars.append(i)
+                
+            extras = len(chars)/length # compute how many newlines will be inserted into the string
+            
+            for i in range(0, len(chars)+extras, length): # Insert newlines
+                chars.insert(i, '\n')
+            
+            for i in chars: # append the output to the final result
+                output += i
+        else: # If the line is not too long, then append it to the final result
+            output += line    
+    
     return output
 forcewrap.is_safe = True
 forcewrap = stringfilter(forcewrap)
