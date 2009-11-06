@@ -21,6 +21,7 @@ def multiply(value, arg):
     return output
 multiply.is_safe = False
 
+
 def divide(value, arg):
     """
     Divides the value by the arg.
@@ -58,13 +59,48 @@ def truncatechars(value, arg):
 truncatechars.is_safe = True
 truncatechars = stringfilter(truncatechars)
 
+
+def forcewrap(value, arg):
+    """
+    Inserts newline characters every so many characters.
+    This filter is dumb and inserts newlines unintelligently.
+    
+    Argument: Number of characters to insert a newline after
+    """
+    from django.utils.encoding import force_unicode
+    
+    try:
+        length = int(arg)
+    except ValueError:
+        return value
+        
+    chars = [] # List of chars
+    
+    for i in range(len(value)): # Put the chars into a list
+        chars.append(value[i])
+        
+    extras = len(chars)/length # compute how many newlines will be inserted into the string
+    
+    for i in range(0, len(chars)+extras, length): # Insert newlines
+        chars.insert(i, '\n')
+    
+    output = ""
+    for i in chars: # rebuild a string from the list of chars.
+        output += i
+        
+    return output
+forcewrap.is_safe = True
+forcewrap = stringfilter(forcewrap)
+    
+
 @stringfilter
 def seewhitespace(value, autoescape=None):
     """Converts space to the proper HTML and tabs to 4 space characters.""" 
     if autoescape:
         value = conditional_escape(value)
 
-    temp = re.sub('\t', '    ', value) # convert tabs to 4 spaces.
+    #temp = re.sub('\t', '    ', value) # convert tabs to 4 spaces.
+    temp = value.expandtabs(4) # convert tabs to 4 spaces.
     temp = re.sub(r'   ', "&nbsp; &nbsp;", temp) # convert 3 spaces to 2 non-breaking spaces and a space.
     return mark_safe(re.sub(r'  ', "&nbsp; ", temp)) # convert 2 spaces to a non-breaking space and a space.
 seewhitespace.is_safe = True
@@ -96,5 +132,6 @@ escapeexcepttags.is_safe = True
 register.filter('multiply', multiply)
 register.filter('divide', divide)
 register.filter('truncatechars', truncatechars)
+register.filter('forcewrap', forcewrap)
 register.filter('seewhitespace', seewhitespace)
 register.filter('escapeexcepttags', escapeexcepttags)
