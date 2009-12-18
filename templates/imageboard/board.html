@@ -78,7 +78,7 @@
         </div>
         {% endif %}
         {% with post.thumbnail.height|default:70 as truncval %}
-        <div class="comment">{{post.comment|seewhitespace|linebreaksbr|truncatewords_html:truncval}}</div>
+        <div class="comment">{{post.comment|forcewrap:70|seewhitespace|linebreaksbr|truncatewords_html:truncval}}</div>
         {% endwith %}
         <div class="vote_form"></div>
     </div>

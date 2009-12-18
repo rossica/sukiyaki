@@ -3,6 +3,7 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 
+
 import re
 
 register = template.Library()
@@ -68,46 +69,57 @@ def forcewrap(value, arg):
     Argument: Number of characters to insert a newline
     """
     from django.utils.encoding import force_unicode
+    from django.utils.text import wrap
+    
+    # Call the Django wrap() function, then split into a list of lines.
+    # then go through the lines and find the ones that are longer than the length, and forcibly insert a newline.
+    # finally, join them all back together into a single string.
     
     try:
         length = int(arg)
     except ValueError:
         return value
         
-    lines = value.splitlines(True)
-    
-    output = ""
-    
-    for line in lines: # For every line in the input
-        if len(line) > length: # if the line is longer than the arg
-            chars = [] # List of chars
+    temp = wrap(value, length)
+        
+    lines = temp.splitlines(True)
 
-            ## Possible Changes:
-            ## Instead of breaking into chars, break into lines, then into words, split by space. Then add newlines.
-            ## If there are no words in a line, then insert the newline into the word.
-            
-            words = line.split(' ')
-            
-            if len(words) == 1: # only one long word in the line
-                pass # insert a newline in the string
-                
-            else: # more than 1 word in the line
-                pass
-                
-            for i in line: # Put the chars into a list
-                chars.append(i)
-                
-            extras = len(chars)/length # compute how many newlines will be inserted into the string
-            
-            for i in range(0, len(chars)+extras, length): # Insert newlines
-                chars.insert(i, '\n')
-            
-            for i in chars: # append the output to the final result
-                output += i
-        else: # If the line is not too long, then append it to the final result
-            output += line    
+     
+    for l in lines:
+        if len(l) > length:
+            x = 0
+            while x < len(l):
+                if x%length == 0:
+                    if x !=0:
+                        l = u''.join([l[:x],u'\n',l[x:]])
+                x = x + 1
     
-    return output
+    # for line in lines: # For every line in the input
+        # if len(line) > length: # if the line is longer than the arg
+            # chars = [] # List of chars
+            
+            # words = line.split(' ')
+            
+            # if len(words) == 1: # only one long word in the line
+                # pass # insert a newline in the string
+                
+            # else: # more than 1 word in the line
+                # pass
+                
+            # for i in line: # Put the chars into a list
+                # chars.append(i)
+                
+            # extras = len(chars)/length # compute how many newlines will be inserted into the string
+            
+            # for i in range(0, len(chars)+extras, length): # Insert newlines
+                # chars.insert(i, '\n')
+            
+            # for i in chars: # append the output to the final result
+                # output += i
+        # else: # If the line is not too long, then append it to the final result
+            # output += line    
+    
+    return u''.join(lines)
 forcewrap.is_safe = True
 forcewrap = stringfilter(forcewrap)
     

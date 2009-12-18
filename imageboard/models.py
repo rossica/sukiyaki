@@ -30,6 +30,11 @@ class DuplicateFileStorage(FileSystemStorage):
         # Store filenames with forward slashes, even on Windows
         return force_unicode(name.replace('\\', '/'))
 
+    def delete(self, name):
+        name = self.path(name)
+        # If the file exists, delete it from the filesystem.
+        if os.path.exists(name):
+            os.remove(name)
 ##############################################################################################
 dfs = DuplicateFileStorage()
 
