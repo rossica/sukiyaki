@@ -70,30 +70,54 @@ def forcewrap(value, arg):
     """
     from django.utils.encoding import force_unicode
     from django.utils.text import wrap
+    import textwrap
     
+    # Goals and steps to accomplish them:
+    #
     # Call the Django wrap() function, then split into a list of lines.
     # then go through the lines and find the ones that are longer than the length, and forcibly insert a newline.
     # finally, join them all back together into a single string.
     
+    # Common code to all types
     try:
-        length = int(arg)
+        length = int(arg) # validate the integer
     except ValueError:
         return value
         
-    temp = wrap(value, length)
-        
-    lines = temp.splitlines(True)
-
-     
-    for l in lines:
-        if len(l) > length:
-            x = 0
-            while x < len(l):
-                if x%length == 0:
-                    if x !=0:
-                        l = u''.join([l[:x],u'\n',l[x:]])
-                x = x + 1
+    # Evan's TextWrapper method
+    #
+    #wrapper = textwrap.TextWrapper()
+    #wrapper.width = length
+    #wrapper.replace_whitespace = False
+    #wrapped_text =  u"\n".join(wrapper.wrap(value))
+    #return wrapped_text
     
+    
+    
+    # My TextWrapper method
+    #
+    #output = textwrap.wrap(value, length)
+    #return u'\n'.join(output)
+
+    
+    
+    # My most successful method
+    #
+    #lines =  wrap(value, length).splitlines(True)
+    #output =[]
+    # for li in lines:
+        # if len(li) > length + 1:
+            # x = 1
+            # while x < len(li):
+                # if x%length == 0:
+                        # li = li[:x] + u'\n' + li[x:]
+                # x = x + 1
+            # output.append( li )
+        # else:
+            # output.append(li)
+    #return u''.join(output)
+    
+    # Old broken way. Use for code snippets, but utterly failure code below.
     # for line in lines: # For every line in the input
         # if len(line) > length: # if the line is longer than the arg
             # chars = [] # List of chars
@@ -118,8 +142,8 @@ def forcewrap(value, arg):
                 # output += i
         # else: # If the line is not too long, then append it to the final result
             # output += line    
-    
-    return u''.join(lines)
+
+    return value # if nothing is uncommented above, do this by default, that is to say, do nothing.
 forcewrap.is_safe = True
 forcewrap = stringfilter(forcewrap)
     
