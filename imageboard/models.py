@@ -31,10 +31,16 @@ class DuplicateFileStorage(FileSystemStorage):
         return force_unicode(name.replace('\\', '/'))
 
     def delete(self, name):
+        import os, stat
         name = self.path(name)
         # If the file exists, delete it from the filesystem.
         if os.path.exists(name):
-            os.remove(name)
+			# But don't delete it if it is read-only. That means it is special.
+            attrs = os.stat(name)
+            if(attrs.st_mode & stat.S_IWRITE): # File is not Read Only
+                os.remove(name)
+            else: # File is read only. 
+                pass # keep this here in case we want to do something later.
 ##############################################################################################
 dfs = DuplicateFileStorage()
 
