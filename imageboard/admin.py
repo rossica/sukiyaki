@@ -1,6 +1,7 @@
 # admin.py for Sukiyaki TextBoard
 from django.contrib import admin
 from sukiyaki.imageboard.models import  Poster, Board, Post, TextPost, ImagePost, ImgVote, TxtVote
+from settings import MEDIA_ROOT
 import datetime
 
 class ImagePostInline(admin.TabularInline):
@@ -68,7 +69,7 @@ class ImagePostAdmin(admin.ModelAdmin):
     date_hierarchy = 'post_time'
     list_display = ('board', 'id', 'user_name', 'email', 'subject', 'poster',)
     list_filter = ('sticky', 'post_time', 'board', 'poster',) # 'rank'
-    actions = ['ban_poster']
+    actions = ['ban_poster', 'ban_image']
     
     def ban_poster(self, request, queryset):
         for post in queryset:
@@ -79,6 +80,48 @@ class ImagePostAdmin(admin.ModelAdmin):
             user.save()
         queryset.update(comment=comment + "\n\n\nTHIS USER IS B&")
     ban_poster.short_description = "Ban poster(s) of selected posts"
+    
+    def ban_image(self, request, queryset):
+        import Image, ImageDraw, ImageFont, os, stat
+        replacement = Image.new("RGB", (128,128), "white")
+        draw = ImageDraw.Draw(replacement)
+        
+        # generate a banned image
+        try: 
+            font = ImageFont.truetype("comicbd.ttf", 100)
+            draw.text((0,0), "B&", font=font, fill="red")
+        except: # in case the desired font is unavailable
+            font = ImageFont.load_default()
+            banned = "B&B&B&B&B&B&B&B&B&B&B&"
+            draw.text((0,0), banned, font=font, fill="red")
+            draw.text((0,10), banned, font=font, fill="red")
+            draw.text((0,20), banned, font=font, fill="red")
+            draw.text((0,30), banned, font=font, fill="red")
+            draw.text((0,40), banned, font=font, fill="red")
+            draw.text((0,50), banned, font=font, fill="red")
+            draw.text((0,60), banned, font=font, fill="red")
+            draw.text((0,70), banned, font=font, fill="red")
+            draw.text((0,80), banned, font=font, fill="red")
+            draw.text((0,90), banned, font=font, fill="red")
+            draw.text((0,100), banned, font=font, fill="red")
+            draw.text((0,110), banned, font=font, fill="red")
+            draw.text((0,120), banned, font=font, fill="red")
+
+        for post in queryset:
+            img_path = os.path.join(MEDIA_ROOT, post.image.name)
+            thumb_path = os.path.join(MEDIA_ROOT, post.thumbnail.name)
+            path, filename = os.path.split(img_path)
+            name, ext = os.path.splitext(filename)
+            
+            if os.stat(img_path).st_mode & stat.S_IWRITE: # file is writeable
+                replacement.save(img_path)
+                os.chmod(img_path, stat.S_IREAD)
+            if os.stat(thumb_path).st_mode & stat.S_IWRITE: # thumb is writeable
+                replacement.save(thumb_path, optimize=True)
+                os.chmod(thumb_path, stat.S_IREAD) # make read-only
+            
+            
+    ban_image.short_description = "Ban selected images"
 
 class BoardAdmin(admin.ModelAdmin):
     fieldsets = [
