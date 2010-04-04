@@ -72,8 +72,8 @@
                 <img src="{{ post.thumbnail.url }}" class="thumbnail" alt="{{post.file_name}}" title="{{post.file_name}}"  border="0" />
             </a>
             <p class="image_meta_data">
-                <span class="image_size">{{post.image.size}}</span>
-                <span class="image_dimensions">({{post.image.width}}x{{post.image.height}})</span>
+                <span class="image_size">{{post.image.size|default:"0"}}</span>
+                <span class="image_dimensions">({{post.image.width|default:"0"}}x{{post.image.height|default:"0"}})</span>
             </p>
         </div>
         {% endif %}
