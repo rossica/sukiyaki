@@ -69,7 +69,7 @@ class ImagePostAdmin(admin.ModelAdmin):
     date_hierarchy = 'post_time'
     list_display = ('board', 'id', 'user_name', 'email', 'subject', 'poster',)
     list_filter = ('sticky', 'post_time', 'board', 'poster',) # 'rank'
-    actions = ['ban_poster', 'ban_image']
+    actions = ['ban_poster', 'ban_image', 'unban_image']
     
     def ban_poster(self, request, queryset):
         for post in queryset:
@@ -130,6 +130,19 @@ class ImagePostAdmin(admin.ModelAdmin):
                     replacement.save(thumb_path, optimize=True)
                     os.chmod(thumb_path, stat.S_IREAD) # make read-only
     ban_image.short_description = "Ban selected images"
+    
+    def unban_image(self, request, queryset):
+        import os, stat
+        for post in queryset:
+            img_path = os.path.join(MEDIA_ROOT, post.image.name)
+            thumb_path = os.path.join(MEDIA_ROOT, post.thumbnail.name)
+            
+            if img_path == thumb_path:
+                os.chmod(img_path, stat.S_IWRITE)
+            else:
+                os.chmod(img_path, stat.S_IWRITE)
+                os.chmod(thumb_path, stat.S_IWRITE)
+    unban_image.short_description = "Unban selected images (make them writeable)"
 
 class BoardAdmin(admin.ModelAdmin):
     fieldsets = [
