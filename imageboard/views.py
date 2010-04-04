@@ -44,6 +44,7 @@ def _gen_thumbnail(imgpost, uploaded_image):
         
         if not os.path.exists(save_to): # if the thumbnail doesn't exist already
             # TODO wrap in try-except for cases where PIL can't figure out what a file is
+            uploaded_image.seek(0) # seek to the beginning of the uploaded file
             thmb = Image.open(uploaded_image).convert('RGB') # Create an Image from the uploaded image and convert it to RGB
             thmb_size = (imgpost.board.max_thumbnail_size, imgpost.board.max_thumbnail_size) # Image.thumbnail() requires a tuple of the maximal dimensions
             thmb.thumbnail(thmb_size, Image.NEAREST) # Create the thumbnail using the fastest method
@@ -51,7 +52,7 @@ def _gen_thumbnail(imgpost, uploaded_image):
             ## WARNING!! This will overwrite any previous thumbnail with the same name. FIX to use the Django save() method ASAP. -- Fixed. disregard
             ## WARNING! This is not compatible with non-disk-based storage. FIX to use Django's save() -- maybe not possible with PIL
             thmb.save(save_to, optimize=True) #Save using the Image.save() method. I would rather use the Django save() method, but this works. 
-        imgpost.thumbnail = thumb_name # Finally, save the relative path to the thumbnail in the database.
+            imgpost.thumbnail = thumb_name # Finally, save the relative path to the thumbnail in the database.
     #imgpost.thumbnail.save(thumb_name, open(save_to))
 
 def _get_post_form(post_id):
