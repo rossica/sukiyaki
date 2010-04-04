@@ -113,14 +113,22 @@ class ImagePostAdmin(admin.ModelAdmin):
             path, filename = os.path.split(img_path)
             name, ext = os.path.splitext(filename)
             
-            if os.stat(img_path).st_mode & stat.S_IWRITE: # file is writeable
-                replacement.save(img_path)
-                os.chmod(img_path, stat.S_IREAD)
-            if os.stat(thumb_path).st_mode & stat.S_IWRITE: # thumb is writeable
-                replacement.save(thumb_path, optimize=True)
-                os.chmod(thumb_path, stat.S_IREAD) # make read-only
+            if img_path == thumb_path: # If the thumbnail and image are the same file, don't write twice (or assume the thumb is JPG)
+                # Overwrite the offensive image with the banned image
+                if os.stat(img_path).st_mode & stat.S_IWRITE: # file is writeable
+                    replacement.save(img_path)
+                    os.chmod(img_path, stat.S_IREAD) # Make read-only
             
-            
+            else: # The thumbnail and image are not the same file (safe to assume the thumbnail is JPG)
+                # Overwrite the offensive image with the banned image
+                if os.stat(img_path).st_mode & stat.S_IWRITE: # file is writeable
+                    replacement.save(img_path)
+                    os.chmod(img_path, stat.S_IREAD) # Make read-only
+                    
+                # Overwrite the offensive thumbnail with the banned image
+                if os.stat(thumb_path).st_mode & stat.S_IWRITE: # thumb is writeable
+                    replacement.save(thumb_path, optimize=True)
+                    os.chmod(thumb_path, stat.S_IREAD) # make read-only
     ban_image.short_description = "Ban selected images"
 
 class BoardAdmin(admin.ModelAdmin):

@@ -8,8 +8,16 @@ import datetime, os.path
 # Models for sukiyaki imageboard app
 # in the future perhaps use abstract classes for more specific models. such as Imagepost and TextPost and FilePost, and ImageBoard and FileBoard
 
-# Because templates wont let us do multiplication
+# Because templates wont let us do multiplication (as of Django 1.1)
 INDENT_PIXELS = 50
+
+# Record the software version here. 
+# All major version changes involve significant changes to the models (e.g. removing or renaming fields, adding new models, reorganizing structure/inheritance, etc.)
+# Significantly changing the way the interface or backend works (as opposed to adding new features and leaving everything else as-is) warrants a major version change.
+# Minor version numbers involve adding new features in the admin or views, or adding (but not removing or renaming) model fields
+# Bug fixes, if they're all lumped together into a single update, also warrent a minor version bump. Otherwise, they're rolled in with other feature updates.
+# For example, version 1.0 was the first stable version with all basic features implemented. 1.1 implements image banning.
+SUKIYAKI_VERSION = 1.1
 
 class DuplicateFileStorage(FileSystemStorage):
     def save(self, name, content):
@@ -31,6 +39,10 @@ class DuplicateFileStorage(FileSystemStorage):
         return force_unicode(name.replace('\\', '/'))
 
     def delete(self, name):
+        """
+        Deletes a file specified by name. If the file is read-only, 
+        it wont be deleted.
+        """
         import os, stat
         name = self.path(name)
         # If the file exists, delete it from the filesystem.
@@ -64,7 +76,7 @@ class Board(models.Model):
     
     nsfw = models.BooleanField("Not safe for work?")
     images = models.BooleanField(default=True, help_text="MUST be set if this board will have images.")
-    files = models.BooleanField(help_text="MUST be set if this board will have files.")
+    files = models.BooleanField(help_text="MUST be set if this board will have <b>non-image</b> files.")
     
     max_filesize = models.IntegerField(default=2000, help_text="Max file size in kilobytes, no commas. Zero for no limit. Default: 2 MB.")
     max_image_dimension = models.IntegerField(default=10000, help_text="Maximum x and y length of an image in pixels. Default: 10000 pixels.")
@@ -201,12 +213,14 @@ class ImagePost(Post):
         import hashlib, os.path
         extension = os.path.splitext(filename)
         self.image.seek(0)
+        # TODO - Fix this to work with file.chunks() -- potentially uses too much memory
         return "images/%s%s" % (hashlib.sha256(self.image.read(self.image.size)).hexdigest(), extension[1])
         
     def thumburl(self, filename):
         import hashlib, os.path
         extension = os.path.splitext(filename)
         self.image.seek(0)
+        # TODO - Fix this to work with file.chunks() -- potentially uses too much memory
         return "thumbs/%s%s" % (hashlib.sha256(self.image.read(self.image.size)).hexdigest(), extension[1])
     
     reply = models.ForeignKey('self', related_name='replies', default=None, null=True, blank=True) # limit_choices_to={'board':self.board}
