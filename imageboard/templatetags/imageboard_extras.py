@@ -25,7 +25,7 @@ multiply.is_safe = False
 
 def divide(value, arg):
     """
-    Divides the value by the arg.
+    Divides the value by the arg. Integer division.
     
     Returns 0 if an exception occurs, or if dividing by zero.
     """
