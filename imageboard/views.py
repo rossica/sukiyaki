@@ -383,11 +383,6 @@ def view_text_post(request, text_id):
 def post(request, board_abbr):
     board = get_object_or_404(Board, abbr=board_abbr)
     
-    if board.images and not board.files:
-        form = ImgPostForm
-    elif not board.images and not board.files:
-        form = TxtPostForm
-    
     if request.method == 'POST':
     
         # Test board type here and jump to appropriate validation
@@ -396,7 +391,11 @@ def post(request, board_abbr):
         elif not board.images and not board.files: # TextPost
             return _txtpost(request, board)
         
-    else: # not POST
+    else: # not POST   
+        if board.images and not board.files:
+            form = ImgPostForm
+        elif not board.images and not board.files:
+            form = TxtPostForm
         return render_to_response('imageboard/board.html', {'form':form, 'delform':DelPostForm, 'board_list':board_list,})
 
 def reply(request, reply_to):
