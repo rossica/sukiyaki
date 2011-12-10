@@ -391,7 +391,7 @@ def post(request, board_abbr):
         elif not board.images and not board.files: # TextPost
             return _txtpost(request, board)
         
-    else: # not POST   
+    else: # not POST
         if board.images and not board.files:
             form = ImgPostForm
         elif not board.images and not board.files:
