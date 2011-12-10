@@ -1,3 +1,7 @@
+# Copyright (C) 2009,2010,2011 Anthony Rossi
+# For License information regarding this software, see LICENSE
+# If no LICENSE file was included, see http://www.opensource.org/licenses/mit-license.php
+
 # Views for sukiyaki imageboard app
 from sukiyaki.imageboard.models import TextPost, ImagePost, Board, Poster, TxtVote, ImgVote, PostForm, TextPostForm, TextReplyForm, ImagePostForm, ImageReplyForm, DeletePostForm, TxtVoteForm, ImgVoteForm
 from settings import MEDIA_ROOT

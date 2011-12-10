@@ -1,4 +1,8 @@
-# admin.py for Sukiyaki TextBoard
+# Copyright (C) 2009,2010,2011 Anthony Rossi
+# For License information regarding this software, see LICENSE
+# If no LICENSE file was included, see http://www.opensource.org/licenses/mit-license.php
+
+# admin.py for Sukiyaki ImageBoard
 from django.contrib import admin
 from sukiyaki.imageboard.models import  Poster, Board, Post, TextPost, ImagePost, ImgVote, TxtVote
 from settings import MEDIA_ROOT

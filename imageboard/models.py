@@ -1,4 +1,8 @@
-﻿from django.db import models
+﻿# Copyright (C) 2009,2010,2011 Anthony Rossi
+# For License information regarding this software, see LICENSE
+# If no LICENSE file was included, see http://www.opensource.org/licenses/mit-license.php
+
+from django.db import models
 from django.forms import ModelForm, Form
 from django import forms
 from django.core.files.storage import Storage, FileSystemStorage
