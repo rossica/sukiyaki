@@ -1,0 +1,91 @@
+﻿TABLE OF CONTENTS
+1.	Introduction to this file and how to use it
+2.	Prerequisites for installation.
+3.	Installation steps
+	3.1 Create Django Project
+	3.2 Configure Sukiyaki
+	3.3	Copy or edit Urls
+	3.4	Initialize Database
+4.	Tweak the URLs 
+
+
+
+
+1. INTRODUCTION
+This file contains the instructions for installing Sukiyaki.
+At this point in time, installing Sukiyaki is not as easy as the authors would
+like. If you know how and would like to help simplify the process, contact 
+Anthony at <anro@acm.org>.
+It is recommended to read the entire document before installing Sukiyaki.
+
+
+2. PREREQUISITES
+Sukiyaki requires:
+	*	Python 2.6 or later (but not 3.0 or later)
+	*	Django 1.2 or later
+	*	Python Imaging Library (PIL) 1.1.6 or later
+	*	An HTTP-server with FastCGI or WSGI support.
+It's outside the scope of this document to explain how to install and
+configure the prerequisites. Please consult the appropriate 
+documentation on their websites.
+Sukiyaki will run on Windows or Linux.
+
+If installing for development purposes, you will need the above except
+for the HTTP-server. 
+
+
+3. INSTALLATION
+While the simplest would be to copy the entire Sukiyaki source to your FastCGI
+directory and run it, we highly discourage that as it introduces some security
+issues. For development, it's not a problem.
+
+	3.1	- Create a new Django project (more directions in Django's userguide)
+		/path/to/python/scripts/django-admin.py startproject sukiyaki
+		
+		Into the sukiyaki folder just created, copy the imageboard/ and
+		templates/ directories.
+		
+	3.2	- Configure your Sukiyaki install's settings
+		Open the settings.py from our source in a text editor and open the
+		settings.py created by the startproject command in another text editor.
+		If doing development, you can just copy all our project files into your
+		project directory without any extra configuration required.
+		
+		Copy over the PROJECT_ROOT variable. This is very important and makes
+		our code much easier to write. This requires import os. So add 
+		an import os statement at the beginning of the file.
+		
+		If doing a server install, set the variable DEBUG to false. Otherwise,
+		when there is a crash, users will get a huge stack trace and also info
+		about the server configuration that could have malicious uses.
+		
+		Configure your database engine. If using SQLite, you can copy our
+		database configuration. For development, SQLite is simplest.
+		
+		Set your MEDIA_ROOT and MEDIA_URL variables.
+		
+		Enable the Session Middleware in MiddlewareClasses. We need it for
+		some of our features.
+		
+		Copy our TEMPLATE_DIRS setting.
+		
+		Finally, add 'django.contrib.admin' and 'sukiyaki.imageboard' to the
+		list of installed apps.
+		
+	3.3	- Set up urls.py
+		Copy our urls.py in the project root into your project root. If you
+		have multiple sites installed and need to put all of Sukiyaki's urls
+		under their own folder, edit the regex for the imageboard app.
+		
+	3.4	- Initialize the Sukiyaki database
+		In your project directory, run the command
+		python manage.py syncdb
+		This will create the tables used by Sukiyaki and set you up as admin.
+		You're now ready to use Sukiyaki!
+		
+		
+4.	TWEAK
+If you don't like the URLs that sukiyaki uses by default for the boards and posts,
+you can edit them in the urls.py file in the imageboard directory.
+		
+
