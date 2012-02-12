@@ -19,7 +19,7 @@ INDENT_PIXELS = 50
 # All major version changes involve significant changes to the models (e.g. removing or renaming fields, adding new models, reorganizing structure/inheritance, etc.)
 # Significantly changing the way the interface or backend works (as opposed to adding new features and leaving everything else as-is) warrants a major version change.
 # Minor version numbers involve adding new features in the admin or views, or adding (but not removing or renaming) model fields
-# Bug fixes, if they're all lumped together into a single update, also warrent a minor version bump. Otherwise, they're rolled in with other feature updates.
+# Bug fixes, if they're all lumped together into a single update, also warrant a minor version bump. Otherwise, they're rolled in with other feature updates.
 # For example, version 1.0 was the first stable version with all basic features implemented. 1.1 implements image banning.
 SUKIYAKI_VERSION = 1.1
 
